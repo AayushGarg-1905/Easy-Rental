@@ -2,9 +2,10 @@
 
 import db from './db'
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
-import { profileSchema, validateWithZodSchema } from "./schemas";
+import { imageSchema, profileSchema, validateWithZodSchema } from "./schemas";
 import {redirect} from 'next/navigation'
 import { revalidatePath } from 'next/cache';
+import { uploadImageToSupabase } from './supabase';
 
 
 const getAuthUser = async()=>{
@@ -110,3 +111,29 @@ export const updateProfileAction = async(prevState:any, formData:FormData):Promi
         return renderError(error);
     }
 }
+
+export const updateProfileImageAction = async(prevState:any, formData:FormData):Promise<{message:string}>=>{
+    
+    const user = await getAuthUser();
+    try{
+        const image = formData.get('image') as File;
+        const validatedFields = validateWithZodSchema(imageSchema,{image});
+        const uploadedImagePath = await uploadImageToSupabase(validatedFields.image);
+
+        await db.profile.update({
+            where:{
+                clerkId:user.id
+            },
+            data:{
+                profileImage:uploadedImagePath
+            }
+        });
+        revalidatePath('/profile');
+        return {message:"Profile image updated successfully"};
+    }
+    catch(error){
+        return renderError(error);
+    }
+    
+}
+
