@@ -1,30 +1,11 @@
 'use server'
-
-import db from './db'
+import db from '../db'
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
-import { imageSchema, profileSchema, validateWithZodSchema } from "./schemas";
+import { imageSchema, profileSchema, validateWithZodSchema } from "../schemas";
 import {redirect} from 'next/navigation'
 import { revalidatePath } from 'next/cache';
-import { uploadImageToSupabase } from './supabase';
-
-
-const getAuthUser = async()=>{
-    const user = await currentUser();
-    if(!user){
-        throw new Error('You must be logged in to access this route');
-    }
-    if(!user.privateMetadata.hasProfile){
-        redirect('/profile/create');
-    }
-
-    return user;
-}
-
-const renderError = (error:unknown):{message:string}=>{
-    return {message: error instanceof Error ? error.message : 'An Error occured'}
-}
-
-
+import { uploadImageToSupabase } from '../supabase';
+import { renderError, getAuthUser } from './commonActions';
 
 export const createProfileAction = async(prevState:any, formData:FormData)=>{
     
@@ -136,4 +117,3 @@ export const updateProfileImageAction = async(prevState:any, formData:FormData):
     }
     
 }
-
