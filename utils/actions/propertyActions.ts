@@ -28,3 +28,28 @@ export const createPropertyAction = async(prevData:any, formData:FormData):Promi
   }
   redirect('/');
 }
+
+
+export const fetchPropertiesAction = async({search='',category}:{search?:string, category?:string})=>{
+  const properties = await db.property.findMany({
+    where:{
+      category:category,
+      OR: [
+        { name: { contains: search, mode: 'insensitive' } },
+        { tagline: { contains: search, mode: 'insensitive' } },
+      ],
+    },
+    select:{
+      id:true,
+      name:true,
+      tagline:true,
+      country:true,
+      image:true,
+      price:true
+    },
+    orderBy:{
+      createdAt:'desc'
+    }
+  })
+  return properties;
+}
