@@ -1,12 +1,25 @@
+import LoadingCards from '@/components/card/LoadingCards'
 import CategoriesList from '@/components/home/CategoriesList'
 import PropertiesContainer from '@/components/home/PropertiesContainer'
 import React from 'react'
+import { Suspense } from 'react'
 
-function HomePage() {
+
+function HomePage({ searchParams }: { searchParams: { category?: string, search?: string } }) {
+
   return (
     <section>
-      <CategoriesList/>
-      <PropertiesContainer/>
+      <CategoriesList
+        category={searchParams?.category}
+        search={searchParams?.search}
+      />
+      <Suspense fallback={<LoadingCards />}>
+        <PropertiesContainer
+          category={searchParams?.category}
+          search={searchParams?.search}
+        />
+      </Suspense>
+
     </section>
   )
 }

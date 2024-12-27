@@ -25,7 +25,7 @@ function CreateProperty() {
               name='name'
               type='text'
               label='Name (20 limit)'
-              defaultValue='Cabin in Cananda'
+              defaultValue='Cabin in India'
             />
             <FormInput
               name='tagline'
