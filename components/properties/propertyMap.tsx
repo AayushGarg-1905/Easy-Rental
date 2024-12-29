@@ -41,6 +41,6 @@ function PropertyMap({ countryCode }: { countryCode: string }) {
         ></Marker>
       </MapContainer>
     </div>
-  );
+  )
 }
 export default PropertyMap;
