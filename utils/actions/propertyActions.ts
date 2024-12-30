@@ -125,16 +125,22 @@ export const fetchFavorites  = async()=>{
 }
 
 
-export const fetchPropertyDetails = (id:string)=>{
+export const fetchPropertyDetails = (id: string) => {
   return db.property.findUnique({
-    where:{
-      id
+    where: {
+      id,
     },
-    include:{
-      profile:true
-    }
-  })
-}
+    include: {
+      profile: true,
+      bookings: {
+        select: {
+          checkIn: true,
+          checkOut: true,
+        },
+      },
+    },
+  });
+};
 
 export async function fetchPropertyRating(propertyId: string) {
   const result = await db.review.groupBy({
