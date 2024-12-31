@@ -161,3 +161,19 @@ export async function fetchPropertyRating(propertyId: string) {
     count: result[0]?._count.rating || 0,
   };
 }
+
+export const fetchOwnedProperties = async()=>{
+
+  const user = await getAuthUser();
+
+  const result =  await db.profile.findFirst({
+    where:{
+      clerkId: user.id
+    },
+    select:{
+      properties:true
+    }
+  })
+  
+  return result?.properties.length
+}
