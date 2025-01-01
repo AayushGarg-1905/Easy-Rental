@@ -15,64 +15,68 @@ import {
 } from '@/components/ui/table';
 import { fetchRentalDetails } from '@/utils/actions/rentalActions';
 import { fetchOwnedProperties } from '@/utils/actions/propertyActions';
+import Stats from '@/components/reservations/Stats';
 
 async function ReservationsPage() {
   const reservations = await fetchReservations();
 
   if (reservations.length === 0) {
     const ownedProperties = await fetchOwnedProperties();
-    if(ownedProperties===0){
-        return <EmptyList heading={`You dont have any owned properties`} message='Create some properties'/>;
+    if (ownedProperties === 0) {
+      return <EmptyList heading={`You dont have any owned properties`} message='Create some properties' />;
     }
-    return <EmptyList heading='No booking on your properties ' message=''/>;
+    return <EmptyList heading='No booking on your properties ' message='' />;
   }
 
   return (
-    <div className='mt-16'>
-      <h4 className='mb-4 capitalize'>
-        Total reservations : {reservations.length}
-      </h4>
-      <Table>
-        <TableCaption>A list of recent reservations.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Property Name</TableHead>
-            <TableHead>Country</TableHead>
-            <TableHead>Nights</TableHead>
-            <TableHead>Total</TableHead>
-            <TableHead>Check In</TableHead>
-            <TableHead>Check Out</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {reservations.map((item) => {
-            const { id, orderTotal, totalNights, checkIn, checkOut } = item;
-            const { id: propertyId, name, country } = item.property;
-            const startDate = formatDate(checkIn);
-            const endDate = formatDate(checkOut);
-            return (
-              <TableRow key={id}>
-                <TableCell>
-                  <Link
-                    href={`/properties/${propertyId}`}
-                    className='underline text-muted-foreground tracking-wide'
-                  >
-                    {name}
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <CountryFlagAndName countryCode={country} />
-                </TableCell>
-                <TableCell>{totalNights}</TableCell>
-                <TableCell>{formatCurrency(orderTotal)}</TableCell>
-                <TableCell>{startDate}</TableCell>
-                <TableCell>{endDate}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+    <>
+      <Stats />
+      <div className='mt-16'>
+        <h4 className='mb-4 capitalize'>
+          Total reservations : {reservations.length}
+        </h4>
+        <Table>
+          <TableCaption>A list of recent reservations.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Property Name</TableHead>
+              <TableHead>Country</TableHead>
+              <TableHead>Nights</TableHead>
+              <TableHead>Total</TableHead>
+              <TableHead>Check In</TableHead>
+              <TableHead>Check Out</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {reservations.map((item) => {
+              const { id, orderTotal, totalNights, checkIn, checkOut } = item;
+              const { id: propertyId, name, country } = item.property;
+              const startDate = formatDate(checkIn);
+              const endDate = formatDate(checkOut);
+              return (
+                <TableRow key={id}>
+                  <TableCell>
+                    <Link
+                      href={`/properties/${propertyId}`}
+                      className='underline text-muted-foreground tracking-wide'
+                    >
+                      {name}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <CountryFlagAndName countryCode={country} />
+                  </TableCell>
+                  <TableCell>{totalNights}</TableCell>
+                  <TableCell>{formatCurrency(orderTotal)}</TableCell>
+                  <TableCell>{startDate}</TableCell>
+                  <TableCell>{endDate}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }
 export default ReservationsPage;
