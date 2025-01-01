@@ -48,6 +48,4 @@ This project is an Airbnb-like platform that allows users to list, search, and b
 - **File Storage**: Supabase
 - **Deployment**: Vercel
 
----
 
-Feel free to clone the repository and explore the features! 😊
